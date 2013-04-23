@@ -1,3 +1,4 @@
+php_value date.timezone "Europe/Moscow"
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
