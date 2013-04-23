@@ -1,8 +1,8 @@
 # Bootstrap
 app/bootstrap*
+.elasticbeanstalk/*
 
 # Symfony directories
-vendor/*
 */logs/*
 */cache/*
 web/uploads/*
@@ -11,4 +11,3 @@ web/uploads/*
 
 # Configuration files
 app/config/parameters.ini
-app/config/parameters.yml
