@@ -23,13 +23,6 @@ class Mission
     private $id;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="type", type="integer", nullable=true)
-     */
-    private $type;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="runtime", type="time")
@@ -56,13 +49,6 @@ class Mission
      * @ORM\Column(name="icons", type="text")
      */
     private $icons;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="form", type="text", nullable=true)
-     */
-    private $form;
 
     /**
      * @var string
@@ -219,29 +205,6 @@ class Mission
     public function getIcons()
     {
         return $this->icons;
-    }
-
-    /**
-     * Set form
-     *
-     * @param string $form
-     * @return Mission
-     */
-    public function setForm($form)
-    {
-        $this->form = $form;
-    
-        return $this;
-    }
-
-    /**
-     * Get form
-     *
-     * @return string 
-     */
-    public function getForm()
-    {
-        return $this->form;
     }
 
     /**
