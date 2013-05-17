@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Point
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Acme\SpyBundle\Entity\PointRepository")
  */
 class Point
 {
@@ -30,6 +30,13 @@ class Point
     private $title;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="active", type="boolean", nullable=true)
+     */
+    private $active;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
@@ -37,18 +44,18 @@ class Point
     private $description;
 
     /**
-     * @var string
+     * @var decimal
      *
-     * @ORM\Column(name="logo", type="text", nullable=true)
+     * @ORM\Column(name="latitude", type="text", length=9)
      */
-    private $logo;
+    private $latitude;
 
     /**
-     * @var string
+     * @var decimal
      *
-     * @ORM\Column(name="coordinates", type="string", length=100, nullable=true)
+     * @ORM\Column(name="longitude", type="text", length=9)
      */
-    private $coordinates;
+    private $longitude;
 
     /**
      * @ORM\ManyToOne(targetEntity="Franchise", inversedBy="points")
@@ -125,51 +132,6 @@ class Point
         return $this->description;
     }
 
-    /**
-     * Set logo
-     *
-     * @param string $logo
-     * @return Point
-     */
-    public function setLogo($logo)
-    {
-        $this->logo = $logo;
-    
-        return $this;
-    }
-
-    /**
-     * Get logo
-     *
-     * @return string 
-     */
-    public function getLogo()
-    {
-        return $this->logo;
-    }
-
-    /**
-     * Set coordinates
-     *
-     * @param string $coordinates
-     * @return Point
-     */
-    public function setCoordinates($coordinates)
-    {
-        $this->coordinates = $coordinates;
-    
-        return $this;
-    }
-
-    /**
-     * Get coordinates
-     *
-     * @return string 
-     */
-    public function getCoordinates()
-    {
-        return $this->coordinates;
-    }
 
     /**
      * Set franchise
@@ -230,5 +192,51 @@ class Point
     public function getMissions()
     {
         return $this->missions;
+    }
+
+    /**
+     * Set latitude
+     *
+     * @param string $latitude
+     * @return Point
+     */
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+    
+        return $this;
+    }
+
+    /**
+     * Get latitude
+     *
+     * @return string 
+     */
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    /**
+     * Set longitude
+     *
+     * @param string $longitude
+     * @return Point
+     */
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+    
+        return $this;
+    }
+
+    /**
+     * Get longitude
+     *
+     * @return string 
+     */
+    public function getLongitude()
+    {
+        return $this->longitude;
     }
 }

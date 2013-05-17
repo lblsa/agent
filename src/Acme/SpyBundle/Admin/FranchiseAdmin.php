@@ -22,6 +22,7 @@ class FranchiseAdmin extends Admin
     {
         $showMapper
                 ->add('id', null, array('label' => 'Идентификатор'))
+                ->add('logo', 'image', array('label' => 'Лого'))
                 ->add('brand', null, array('label' => 'Бренд'))
                 ->add('industry', null, array('label' => 'Индустрия задания (horeca, cpg, retail)'));
     }
@@ -34,25 +35,12 @@ class FranchiseAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
+                ->add('logo', 'file', array('label' => 'Лого'))
                 ->add('brand', null, array('label' => 'Бренд'))
                 ->add('industry', null, array('label' => 'Индустрия'))
-
-        //by_reference используется для того чтобы при трансформации данных запроса в объект сущности
-        //которую выполняет Symfony Form Framework, использовался setter сущности News::setNewsLinks
-                
-        /*
-                ->add('newsLinks', 'sonata_type_collection',
-                      array('label' => 'Ссылки', 'by_reference' => false),
-                      array(
-                           'edit' => 'inline',
-                           //В сущности NewsLink есть поле pos, отражающее положение ссылки в списке
-                          //указание опции sortable позволяет менять положение ссылок в списке перетаскиваением
-                           'sortable' => 'pos',
-                           'inline' => 'table',
-                      ))
-                ->add('newsCategory', null, array('label' => 'Категория'))*/
                 ->setHelps(array(
-                                'brand' => 'Бренд торговых точки',
+                                'logo' => 'Лого сети',
+                                'brand' => 'Бренд торговых точек',
                                 'industry' => 'Индустрия задания (horeca, cpg, retail)'
                            ));
 
@@ -69,7 +57,8 @@ class FranchiseAdmin extends Admin
         $listMapper
                 ->addIdentifier('id')
                 ->addIdentifier('brand', null, array('label' => 'Бренд'))
-                ->add('industry', null, array('label' => 'Индустрия задания'));
+                ->add('logo', 'image', array('label' => 'Лого'))
+                ->add('industry', null, array('label' => 'Индустрия'));
     }
 
     /**
@@ -81,7 +70,8 @@ class FranchiseAdmin extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-                ->add('brand', null, array('label' => 'Бренд'));
+                ->add('brand', null, array('label' => 'Бренд'))
+                ->add('industry', null, array('label' => 'Индустрия'));
     }
 
     /**

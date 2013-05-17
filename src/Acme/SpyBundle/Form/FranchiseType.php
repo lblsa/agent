@@ -11,6 +11,7 @@ class FranchiseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('logo')
             ->add('brand')
             ->add('industry')
         ;
@@ -19,12 +20,22 @@ class FranchiseType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Acme\SpyBundle\Entity\Franchise'
+            'data_class' => 'Acme\SpyBundle\Entity\Franchise',
+            'csrf_protection' => false
         ));
     }
 
     public function getName()
     {
-        return 'acme_spybundle_franchisetype';
+        return 'franchise';
     }
+    /*
+    public function getDefaultOptions(array $options)
+    {
+        $options = parent::getDefaultOptions($options);
+        $options['csrf_protection'] = false;
+
+        return $options;
+    }
+    */
 }

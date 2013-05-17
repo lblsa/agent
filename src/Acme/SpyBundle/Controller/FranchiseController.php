@@ -34,6 +34,7 @@ class FranchiseController extends Controller
         foreach ($entities as $entity) {
             $entities_array[] = array(
                 'id' => $entity->getId(),
+                'logo' => $entity->getLogo(),
                 'brand' => $entity->getBrand(),
                 'industry' => $entity->getIndustry()
             );
@@ -69,19 +70,7 @@ class FranchiseController extends Controller
         $form = $this->createForm(new FranchiseType(), $entity);
         $form->bind($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            $json_string = json_encode($entity->getId());
-        } else {
-            $json_string = json_encode('Неверный запрос');
-        }
-
-
         $response = new Response();
-        $response->setContent($json_string);
         $response->headers->set('Content-Type', 'application/json; charset=utf-8');
         $response->setCache(array(
             'etag'          => 'abcdef',
@@ -91,6 +80,28 @@ class FranchiseController extends Controller
             'private'       => false,
             'public'        => true,
         ));
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            $json_string = json_encode($entity->getId());
+        } else {
+            $errors = $form->getErrors();
+/*
+            var_dump($errors);
+            foreach ($errors as $k => $v) {
+                print_r($k, true);
+                print_r($v, true);
+            } die;*/
+
+            $json_string = json_encode(serialize($errors));
+           // $json_string = json_encode('Неверный запрос');
+            $response->setStatusCode(400);
+        }
+
+        $response->setContent($json_string);
         return $response;
     }
 
@@ -136,11 +147,12 @@ class FranchiseController extends Controller
         ));
 
         if (!$entity) {
-            $json_string = json_encode('Сеть не найдена');
+            $json_string = json_encode("Сеть не найдена");
             $response->setStatusCode(404);
         } else {
             $entity_array = array(
                 'id' => $entity->getId(),
+                'logo' => $entity->getLogo(),
                 'brand' => $entity->getBrand(),
                 'industry' => $entity->getIndustry()
             );
@@ -238,7 +250,9 @@ class FranchiseController extends Controller
 
             $json_string = json_encode($entity->getId());
         } else {
-            $json_string = json_encode('Неверный запрос');
+            $errors = $form->getErrors();
+            $json_string = json_encode(serialize($errors));
+            //$json_string = json_encode('Неверный запрос');
             $response->setStatusCode(400);
         }
 
@@ -273,21 +287,23 @@ class FranchiseController extends Controller
             $entity = $em->getRepository('AcmeSpyBundle:Franchise')->find($id);
 
             if (!$entity) {
-                $json_string = MissionController::utf_cyr(json_encode('Сеть не найдена'));
-                
+                $json_string = json_encode('Сеть не найдена');
                 $response->setStatusCode(404);
-                $response->setContent($json_string);
-                
-                return $response;
+            } else {
+                $em->remove($entity);
+                $em->flush();
+                $json_string = $id;
             }
-
-            $em->remove($entity);
-            $em->flush();
-            $json_string = $id;
+            
         } else {
-            $json_string = json_encode('Неверный запрос');
+
+            $errors = $form->getErrors();
+            $json_string = json_encode(serialize($errors));
+            $response->setStatusCode(400);
+            //$json_string = json_encode('Неверный запрос');
         }
 
+        $json_string = MissionController::utf_cyr($json_string);
         $response->setContent($json_string);
 
         return $response;
@@ -302,7 +318,7 @@ class FranchiseController extends Controller
      */
     private function createDeleteForm($id)
     {
-        return $this->createFormBuilder(array('id' => $id))
+        return $this->createFormBuilder(array('id' => $id),array('csrf_protection' => false))
             ->add('id', 'hidden')
             ->getForm()
         ;
