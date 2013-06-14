@@ -6,3 +6,8 @@ php:
 
 script:
   - phpunit
+
+notifications:
+  email:
+    - vladimir.stasevich@gmail.com
+    - roman.efimushkin@gmail.com
