@@ -2,7 +2,7 @@
 require_once 'PHPUnit/Autoload.php';
 require_once 'secagent.php';
 
-class SecAgentApiFranchiseTest extends PHPUnit_Framework_TestCase {
+class SecAgentApiPointTest extends PHPUnit_Framework_TestCase {
     protected $api;
 
     protected function setUp()
@@ -15,13 +15,13 @@ class SecAgentApiFranchiseTest extends PHPUnit_Framework_TestCase {
         $this->api = NULL;
     }
 
-    function testGetFranchiseListWithLastSlash()
+    function testGetPointListWithLastSlash()
     {
-        $this->markTestSkipped('Fix url.');
+//        $this->markTestSkipped('Fix url.');
 
         try
         {
-            $res = $this->api->send('/franchise');
+            $res = $this->api->send('/point/');
             $this->assertTrue(true);
         }
         catch(SecAgentException $e)
@@ -30,11 +30,11 @@ class SecAgentApiFranchiseTest extends PHPUnit_Framework_TestCase {
         }
     }
 
-    function testGetFranchiseListWithOutLastSlash()
+    function testGetPointListWithOutLastSlash()
     {
         try
         {
-            $res = $this->api->send('/franchise/');
+            $res = $this->api->send('/point');
             $this->assertTrue(true);
         }
         catch(SecAgentException $e)
@@ -43,12 +43,12 @@ class SecAgentApiFranchiseTest extends PHPUnit_Framework_TestCase {
         }
     }
 
-    function testGetFranchiseListInvalidUrl()
+    function testGetPointListInvalidUrl()
     {
         try
         {
-            $res = $this->api->send('/franchise/x');
-            $this->assertTrue(true);
+            $res = $this->api->send('/point/x');
+            $this->assertTrue(false);
         }
         catch(SecAgentException $e)
         {
@@ -57,82 +57,88 @@ class SecAgentApiFranchiseTest extends PHPUnit_Framework_TestCase {
     }
 
     // Create
-    function testCreateFranchise()
+    function testCreatePoint()
     {
-        $this->markTestSkipped('Fix data.');
+//        $this->markTestSkipped('Fix data.');
 
         try
         {
             $data = array(
-                    'franchise[brand]' => 'test_brand1',
-                    'franchise[logo]'  => 'test_logo1',
-                    'franchise[industry]' => 'horeca'
+                    'point[title]' => 'test_title1',
+                    'point[description]'  => 'test_description1',
+                    'point[active]'  => 'true',
+                    'point[latitude]'  => '55.77',
+                    'point[longitude]'  => '37.58',
+                    'point[franchise]'  => 1
                     );
 
-            $res = $this->api->send('/franchise/', 'POST', $data);
+            $res = $this->api->send('/point/', 'POST', $data);
 
             $this->assertTrue(true);
         }
         catch(SecAgentException $e)
         {
-            $this->assertEquals($e->getMessage(), 404);
+            echo $e->getMessage()."\n";
+            $this->assertEquals(false);
         }
     }
 
-    function testCreateFranchiseWithNoData()
+    /*
+    function testCreatePointWithNoData()
     {
         $this->markTestIncomplete();
     }
 
-    function testCreateFranchiseInvalidBrand()
+    function testCreatePointInvalidBrand()
     {
         $this->markTestIncomplete();
     }
 
-    function testCreateFranchiseInvalidLogo()
+    function testCreatePointInvalidLogo()
     {
         $this->markTestIncomplete();
     }
 
-    function testCreateFranchiseInvalidIndustry()
+    function testCreatePointInvalidIndustry()
     {
         $this->markTestIncomplete();
     }
 
     // Update
-    function testUpdateFranchise()
+    function testUpdatePoint()
     {
         $this->markTestIncomplete();
     }
 
-    function testUpdateFranchiseWithEmptyData()
+    function testUpdatePointWithEmptyData()
     {
         $this->markTestIncomplete();
     }
 
-    function testUpdateFranchiseInvalidBrand()
+    function testUpdatePointInvalidBrand()
     {
         $this->markTestIncomplete();
     }
 
-    function testUpdateFranchiseInvalidLogo()
+    function testUpdatePointInvalidLogo()
     {
         $this->markTestIncomplete();
     }
 
-    function testUpdateFranchiseInvalidIndustry()
+    function testUpdatePointInvalidIndustry()
     {
         $this->markTestIncomplete();
     }
 
     // Delete
-    function testDeleteFranchise()
+    function testDeletePoint()
     {
         $this->markTestIncomplete();
     }
 
-    function testDeleteFranchiseInvalidId()
+    function testDeletePointInvalidId()
     {
         $this->markTestIncomplete();
     }
+    */
 }
