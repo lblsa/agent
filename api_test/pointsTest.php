@@ -7,7 +7,7 @@ class SecAgentApiPointTest extends PHPUnit_Framework_TestCase {
 
     protected function setUp()
     {
-        $this->api = new SecAgent('', 'http://stage.secagent.ru/app_dev.php');
+        $this->api = new SecAgent('', 'http://stage.secagent.ru');
     }
 
     protected function tearDown()
@@ -15,130 +15,143 @@ class SecAgentApiPointTest extends PHPUnit_Framework_TestCase {
         $this->api = NULL;
     }
 
-    function testGetPointListWithLastSlash()
-    {
-//        $this->markTestSkipped('Fix url.');
-
-        try
-        {
-            $res = $this->api->send('/point/');
-            $this->assertTrue(true);
-        }
-        catch(SecAgentException $e)
-        {
-            $this->assertTrue(false);
-        }
-    }
-
-    function testGetPointListWithOutLastSlash()
-    {
-        try
-        {
-            $res = $this->api->send('/point');
-            $this->assertTrue(true);
-        }
-        catch(SecAgentException $e)
-        {
-            $this->assertTrue(false);
-        }
-    }
-
-    function testGetPointListInvalidUrl()
-    {
-        try
-        {
-            $res = $this->api->send('/point/x');
-            $this->assertTrue(false);
-        }
-        catch(SecAgentException $e)
-        {
-            $this->assertEquals($e->getMessage(), 404);
-        }
-    }
-
     // Create
     function testCreatePoint()
     {
-//        $this->markTestSkipped('Fix data.');
-
         try
         {
-            $data = array(
-                    'point[title]' => 'test_title1',
-                    'point[description]'  => 'test_description1',
-                    'point[active]'  => 'true',
-                    'point[latitude]'  => '55.77',
-                    'point[longitude]'  => '37.58',
-                    'point[franchise]'  => 1
-                    );
+            $data = 'point[title]=test_title1&point[description]=test_description1&point[active]=1&point[latitude]=55.77&point[longitude]=37.58&point[franchise]=1';
 
-            $res = $this->api->send('/point/', 'POST', $data);
+            $obj = $this->api->createPoint($data);
+            $this->assertTrue(is_object($obj));
 
-            $this->assertTrue(true);
+            $this->api->deletePoint($obj->id);
         }
         catch(SecAgentException $e)
         {
-            echo $e->getMessage()."\n";
-            $this->assertEquals(false);
+            $this->fail($e->getMessage()."\n");
         }
     }
 
-    /*
     function testCreatePointWithNoData()
     {
-        $this->markTestIncomplete();
+        try
+        {
+            $obj = $this->api->createPoint('');
+
+            $this->fail("This point should not be reachable\n");
+        }
+        catch(SecAgentException $e)
+        {
+            if (500 == $e->getMessage())
+                $this->fail($e->getMessage()."\n");
+        }
     }
 
     function testCreatePointInvalidBrand()
     {
-        $this->markTestIncomplete();
-    }
+        try
+        {
+            $data = 'point[title]=test_title1&point[description]=test_description1&point[active]=1&point[latitude]=55.77&point[longitude]=37.58&point[franchise]=-1';
 
-    function testCreatePointInvalidLogo()
-    {
-        $this->markTestIncomplete();
-    }
+            $obj = $this->api->createPoint($data);
 
-    function testCreatePointInvalidIndustry()
-    {
-        $this->markTestIncomplete();
+            $this->fail("This point should not be reachable\n");
+        }
+        catch(SecAgentException $e)
+        {
+            if (500 == $e->getMessage())
+                $this->fail($e->getMessage()."\n");
+        }
     }
 
     // Update
     function testUpdatePoint()
     {
-        $this->markTestIncomplete();
+        try
+        {
+            $data = 'point[title]=test_title1&point[description]=test_description1&point[active]=1&point[latitude]=55.77&point[longitude]=37.58&point[franchise]=1';
+
+            $obj = $this->api->createPoint($data);
+
+            $data = 'point[title]=new_test_title1&point[description]=new_test_description1&point[active]=1&point[latitude]=55.77&point[longitude]=37.58&point[franchise]=1';
+
+            $obj2 = $this->api->updatePoint($obj->id, $data);
+
+            $this->api->deletePoint($obj->id);
+        }
+        catch(SecAgentException $e)
+        {
+            $this->fail($e->getMessage()."\n");
+        }
     }
 
     function testUpdatePointWithEmptyData()
     {
-        $this->markTestIncomplete();
+        $obj = null;
+        try
+        {
+            $data = 'point[title]=test_title1&point[description]=test_description1&point[active]=1&point[latitude]=55.77&point[longitude]=37.58&point[franchise]=1';
+
+            $obj = $this->api->createPoint($data);
+
+            $obj2 = $this->api->updatePoint($obj->id, '');
+
+            $this->fail("This point should not be reachable\n");
+        }
+        catch(SecAgentException $e)
+        {
+            if (500 == $e->getMessage())
+                $this->fail($e->getMessage()."\n");
+            else
+            {
+                if (is_object($obj))
+                    $this->api->deletePoint($obj->id);
+            }
+        }
     }
 
     function testUpdatePointInvalidBrand()
     {
-        $this->markTestIncomplete();
-    }
+        $obj = null;
+        try
+        {
+            $data = 'point[title]=test_title1&point[description]=test_description1&point[active]=1&point[latitude]=55.77&point[longitude]=37.58&point[franchise]=1';
 
-    function testUpdatePointInvalidLogo()
-    {
-        $this->markTestIncomplete();
-    }
+            $obj = $this->api->createPoint($data);
 
-    function testUpdatePointInvalidIndustry()
-    {
-        $this->markTestIncomplete();
-    }
+            $data = 'point[title]=new_test_title1&point[description]=new_test_description1&point[active]=1&point[latitude]=55.77&point[longitude]=37.58&point[franchise]=X';
 
-    // Delete
-    function testDeletePoint()
-    {
-        $this->markTestIncomplete();
+            $obj2 = $this->api->updatePoint($obj->id, $data);
+
+            $this->fail("This point should not be reachable\n");
+
+        }
+        catch(SecAgentException $e)
+        {
+            if (500 == $e->getMessage())
+                $this->fail($e->getMessage()."\n");
+            else
+            {
+                if (is_object($obj))
+                    $this->api->deletePoint($obj->id);
+            }
+        }
     }
 
     function testDeletePointInvalidId()
     {
-        $this->markTestIncomplete();
+        try
+        {
+            $this->api->deletePoint('X');
+
+            $this->fail("This point should not be reachable\n");
+
+        }
+        catch(SecAgentException $e)
+        {
+            if (500 == $e->getMessage())
+                $this->fail($e->getMessage()."\n");
+        }
     }
-    */
 }
